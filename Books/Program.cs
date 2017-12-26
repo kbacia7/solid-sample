@@ -7,30 +7,34 @@ namespace Books
     {
         static void Main(string[] args)
         {
-            BookContext bC = new BookContext();
             Console.WriteLine("Commands: ");
             Console.WriteLine("/add <book/author>");
+            BookContext bC = new BookContext();
             ParseCommand parser = new ParseCommand();
-            Command command = new Command(bC);
+            CommandExecutor command = new CommandExecutor(bC);
             ICommand commandToExecute = null;
+            InputReader inputReader = new InputReader();
+            CommandListener commandListener = new CommandListener();
+            CommandExistsValidator commandExistsValidator = new CommandExistsValidator();
+            ValidatorResult validatorResult = null;
+            ErrorOutput errorOutput = new ErrorOutput();
             while(true)
             {
-                string line = Console.ReadLine();
+                string line = inputReader.ReadInput();
                 if (line.Length > 0)
                 {
                     List<string> data = parser.Parse(line);
                     if (data != null)
                     {
                         string commandName = data[0];
-                        switch (commandName)
+                        validatorResult = commandExistsValidator.Validate(commandName);
+                        if (validatorResult.Success)
                         {
-                            case "add":
-                                {
-                                    commandToExecute = new CommandAdd();
-                                    break;
-                                }
+                            commandToExecute = commandListener.GetCommandByName(commandName);
+                            command.ExecuteCommand(commandToExecute, data);
                         }
-                        command.ExecuteCommand(commandToExecute, data);
+                        else
+                            errorOutput.ErrorParse(validatorResult.ErrorCode);
                     }
                 }
                 else

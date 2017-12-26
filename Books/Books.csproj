@@ -50,7 +50,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CommandAdd.cs" />
+    <Compile Include="Commands\CommandListener.cs" />
+    <Compile Include="Commands\CommandParams.cs" />
     <Compile Include="ErrorOutput.cs" />
+    <Compile Include="InputReader.cs" />
     <Compile Include="Migrations\201712261046129_Initial.cs" />
     <Compile Include="Migrations\201712261046129_Initial.Designer.cs">
       <DependentUpon>201712261046129_Initial.cs</DependentUpon>
@@ -60,14 +63,15 @@
       <DependentUpon>201712261051060_ForeignKeys.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Validators\CommandValidator.cs" />
-    <Compile Include="Commands\Command.cs" />
+    <Compile Include="Validators\CommandExistsValidator.cs" />
+    <Compile Include="Validators\CommandFormatValidator.cs" />
+    <Compile Include="Commands\CommandExecutor.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Context\BookContext.cs" />
     <Compile Include="Validators\DataTypeValidator.cs" />
     <Compile Include="Validators\ErrorCode.cs" />
     <Compile Include="Validators\IValidator.cs" />
-    <Compile Include="Manager\CModel.cs" />
+    <Compile Include="CModel\CModel.cs" />
     <Compile Include="Model\Author.cs" />
     <Compile Include="Model\Book.cs" />
     <Compile Include="Commands\ParseCommand.cs" />

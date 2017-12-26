@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
 
-public class Command
+public class CommandExecutor
 {
     private BookContext BookContext;
-    public Command(BookContext bookContext)
+    public CommandExecutor(BookContext bookContext)
     {
         BookContext = bookContext;
     }
@@ -22,5 +22,5 @@ public class Command
         }
         else
             errorOutput.ErrorParse(res.ErrorCode);
-    }
+    } 
 }

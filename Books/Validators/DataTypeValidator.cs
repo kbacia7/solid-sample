@@ -7,4 +7,3 @@
         return new ValidatorResult(ErrorCode.INVALID_DATA_TYPE);
     }
 }
-

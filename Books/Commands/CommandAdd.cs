@@ -4,7 +4,6 @@ using System.Reflection;
 
 public class CommandAdd : ICommand
 {
-    public string Name { get { return "add"; } }
     public void Execute(List<string> args, BookContext bookContext)
     {
         TypeValidator typeValidator = new TypeValidator();
@@ -34,5 +33,4 @@ public class CommandAdd : ICommand
         else
             errorOutput.ErrorParse(validatorResult.ErrorCode);
     }
-}
-
+}   

@@ -1,4 +1,4 @@
-﻿public class CommandValidator : IValidator
+﻿public class CommandFormatValidator : IValidator
 {
     public ValidatorResult Validate(string command)
     {

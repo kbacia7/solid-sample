@@ -6,7 +6,7 @@ public class ParseCommand
 {
     public List<string> Parse(string command)
     {       
-        CommandValidator validator = new CommandValidator();
+        CommandFormatValidator validator = new CommandFormatValidator();
         ValidatorResult validatorResult = validator.Validate(command);
         ErrorOutput errorOutput = new ErrorOutput();
         if (validatorResult.Success)
@@ -20,4 +20,3 @@ public class ParseCommand
         return null;
     }
 }
-
