@@ -4,11 +4,17 @@ using System.Linq;
 
 public class ParseCommand
 {
+    IValidator validator;
+    ConsoleErrorOutput errorOutput;
+    public ParseCommand(IValidator _validator, ConsoleErrorOutput _errorOutput)
+    {
+        validator = _validator;
+        errorOutput = _errorOutput;
+    }
+
     public List<string> Parse(string command)
     {       
-        CommandFormatValidator validator = new CommandFormatValidator();
         ValidatorResult validatorResult = validator.Validate(command);
-        ErrorOutput errorOutput = new ErrorOutput();
         if (validatorResult.Success)
         {
             string[] args = command.Split(' ');
@@ -16,7 +22,7 @@ public class ParseCommand
             return args.ToList();
         }
         else
-            errorOutput.ErrorParse(validatorResult.ErrorCode);
+            errorOutput.WriteError(validatorResult.ErrorCode);
         return null;
     }
 }

@@ -10,14 +10,17 @@ namespace Books
             Console.WriteLine("Commands: ");
             Console.WriteLine("/add <book/author>");
             BookContext bC = new BookContext();
-            ParseCommand parser = new ParseCommand();
-            CommandExecutor command = new CommandExecutor(bC);
+            LengthValidator lengthValidator = new LengthValidator();
+            CommandFormatValidator commandFormatValidator = new CommandFormatValidator();
+            ConsoleErrorOutput errorOutput = new ConsoleErrorOutput();
+            ParseCommand parser = new ParseCommand(commandFormatValidator, errorOutput);
+            CommandExecutor command = new CommandExecutor(lengthValidator, errorOutput, bC);
             ICommand commandToExecute = null;
             InputReader inputReader = new InputReader();
             CommandListener commandListener = new CommandListener();
             CommandExistsValidator commandExistsValidator = new CommandExistsValidator();
             ValidatorResult validatorResult = null;
-            ErrorOutput errorOutput = new ErrorOutput();
+          
             while(true)
             {
                 string line = inputReader.ReadInput();
@@ -30,11 +33,11 @@ namespace Books
                         validatorResult = commandExistsValidator.Validate(commandName);
                         if (validatorResult.Success)
                         {
-                            commandToExecute = commandListener.GetCommandByName(commandName);
+                            commandToExecute = commandListener.GetCommandByName(commandName, errorOutput);
                             command.ExecuteCommand(commandToExecute, data);
                         }
                         else
-                            errorOutput.ErrorParse(validatorResult.ErrorCode);
+                            errorOutput.WriteError(validatorResult.ErrorCode);
                     }
                 }
                 else

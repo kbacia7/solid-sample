@@ -4,12 +4,17 @@ using System.Reflection;
 
 public class CommandAdd : ICommand
 {
+    IValidator[] validators;    //[0] => TypeValidator,  [1] => DataTypeValidator
+    IErrorOutput errorOutput;
+    public CommandAdd(IValidator[] _validators)
+    {
+        validators = _validators;
+    }
+
     public void Execute(List<string> args, BookContext bookContext)
     {
-        TypeValidator typeValidator = new TypeValidator();
-        ErrorOutput errorOutput = new ErrorOutput();
         string type = args[0];
-        ValidatorResult validatorResult = typeValidator.Validate(type);
+        ValidatorResult validatorResult = validators[0].Validate(type);
         if (validatorResult.Success)
         {
             Console.WriteLine("Create a new element");
@@ -17,10 +22,9 @@ public class CommandAdd : ICommand
             Type searchType = Type.GetType(type, true, true);
             dynamic sObj = Activator.CreateInstance(searchType);
             PropertyInfo[] properties = searchType.GetProperties();
-            DataTypeValidator dTypeValidator = new DataTypeValidator();
             foreach (PropertyInfo property in properties)
             {
-                if (dTypeValidator.Validate(property.PropertyType.ToString()).Success)
+                if (validators[1].Validate(property.PropertyType.ToString()).Success)
                 {
                     Console.Write(string.Format("{0}: ", property.Name));
                     string value = Console.ReadLine();
@@ -31,6 +35,11 @@ public class CommandAdd : ICommand
             sObj.Add(bookContext);
         }
         else
-            errorOutput.ErrorParse(validatorResult.ErrorCode);
+            errorOutput.WriteError(validatorResult.ErrorCode);
+    }
+
+    public void SetErrorOutput(IErrorOutput _errorOutput)
+    {
+        errorOutput = _errorOutput;
     }
 }   

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class ErrorOutput
+public class ConsoleErrorOutput : IErrorOutput
 {
     Dictionary<ErrorCode, string> Errors = new Dictionary<ErrorCode, string>()
     {
@@ -13,16 +13,11 @@ public class ErrorOutput
 
     };
 
-    void WriteError(string text)
+    public void WriteError(ErrorCode errorCode)
     {
         Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine(text);
+        Console.WriteLine(Errors[errorCode]);
         Console.ForegroundColor = ConsoleColor.White;
-    }
-
-    public void ErrorParse(ErrorCode errorCode)
-    {
-        WriteError(Errors[errorCode]);
     }
 }
 

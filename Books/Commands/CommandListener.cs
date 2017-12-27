@@ -17,14 +17,19 @@ public class CommandListener
                 {
                     {"type", typeof(string)}
                 },
-                Command = new CommandAdd()
+                Command = new CommandAdd(new IValidator[] {
+                    new TypeValidator(), new DataTypeValidator()
+                })
             }
         }
     };
 
-    public ICommand GetCommandByName(string name)
+
+    public ICommand GetCommandByName(string name, IErrorOutput _errorOutput)
     {
-        return CommandList[name].Command;
+        ICommand command = CommandList[name].Command;
+        command.SetErrorOutput(_errorOutput);
+        return command;
     }
 
     public int GetCommandArgsCountByName(string name)

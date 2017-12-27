@@ -52,7 +52,8 @@
     <Compile Include="Commands\CommandAdd.cs" />
     <Compile Include="Commands\CommandListener.cs" />
     <Compile Include="Commands\CommandParams.cs" />
-    <Compile Include="ErrorOutput.cs" />
+    <Compile Include="Errors\ConsoleErrorOutput.cs" />
+    <Compile Include="Errors\IErrorOutput.cs" />
     <Compile Include="InputReader.cs" />
     <Compile Include="Migrations\201712261046129_Initial.cs" />
     <Compile Include="Migrations\201712261046129_Initial.Designer.cs">
