@@ -2,4 +2,3 @@
 {
     ValidatorResult Validate(string text);
 }
-

@@ -23,4 +23,3 @@ public class Author : CModel
         base.Remove(bookContext);
     }
 }
-

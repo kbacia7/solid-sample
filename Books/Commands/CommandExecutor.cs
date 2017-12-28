@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 
-
 public class CommandExecutor
 {
     private BookContext BookContext;
@@ -13,7 +12,7 @@ public class CommandExecutor
         BookContext = bookContext;
     }
 
-    public void ExecuteCommand(ICommand command, List<string> args)
+    public void ExecuteCommand(ICommand command, IList<string> args)
     {
         string data = string.Join(" ", args);
         ValidatorResult res = validator.Validate(data);

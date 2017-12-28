@@ -7,18 +7,26 @@ namespace Books
     {
         static void Main(string[] args)
         {
+            ConsoleErrorOutput errorOutput = new ConsoleErrorOutput();
+            TypeValidator typeValidator = new TypeValidator();
+            DataTypeValidator dataTypeValidator = new DataTypeValidator();
+            CommandFormatValidator commandFormatValidator = new CommandFormatValidator();
+            IValidator[] validators = new IValidator[]
+            {
+                dataTypeValidator, typeValidator
+            };
+            CommandListener commandListener = new CommandListener(validators, errorOutput);
+            LengthValidator lengthValidator = new LengthValidator(commandListener);
+            CommandExistsValidator commandExistsValidator = new CommandExistsValidator(commandListener);
+
             Console.WriteLine("Commands: ");
             Console.WriteLine("/add <book/author>");
             BookContext bC = new BookContext();
-            LengthValidator lengthValidator = new LengthValidator();
-            CommandFormatValidator commandFormatValidator = new CommandFormatValidator();
-            ConsoleErrorOutput errorOutput = new ConsoleErrorOutput();
             ParseCommand parser = new ParseCommand(commandFormatValidator, errorOutput);
             CommandExecutor command = new CommandExecutor(lengthValidator, errorOutput, bC);
             ICommand commandToExecute = null;
             InputReader inputReader = new InputReader();
-            CommandListener commandListener = new CommandListener();
-            CommandExistsValidator commandExistsValidator = new CommandExistsValidator();
+            
             ValidatorResult validatorResult = null;
           
             while(true)
@@ -33,7 +41,7 @@ namespace Books
                         validatorResult = commandExistsValidator.Validate(commandName);
                         if (validatorResult.Success)
                         {
-                            commandToExecute = commandListener.GetCommandByName(commandName, errorOutput);
+                            commandToExecute = commandListener.GetCommandByName(commandName);
                             command.ExecuteCommand(commandToExecute, data);
                         }
                         else

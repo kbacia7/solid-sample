@@ -20,4 +20,3 @@ public class ConsoleErrorOutput : IErrorOutput
         Console.ForegroundColor = ConsoleColor.White;
     }
 }
-

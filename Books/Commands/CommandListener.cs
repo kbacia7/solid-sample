@@ -1,45 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 public class CommandListener
 {
-    Dictionary<string, CommandParams> CommandList = new Dictionary<string, CommandParams>()
+    Dictionary<string, CommandParams> commandList = new Dictionary<string, CommandParams>()
     {
-        {
+         {
             "add",
             new CommandParams()
-            {
+            { 
                 RequiredArgs = new Dictionary<string, Type>()
                 {
-                    {"type", typeof(string)}
-                },
-                Command = new CommandAdd(new IValidator[] {
-                    new TypeValidator(), new DataTypeValidator()
-                })
+                    { "type", typeof(string)}
+                }
             }
         }
     };
-
-
-    public ICommand GetCommandByName(string name, IErrorOutput _errorOutput)
+    public Dictionary<string, CommandParams> CommandList
     {
-        ICommand command = CommandList[name].Command;
-        command.SetErrorOutput(_errorOutput);
+        get { return commandList; }
+    }
+
+    public CommandListener(IValidator[] validators, IErrorOutput errorOutput)
+    {
+        DataTypeValidator dataTypeValidator = (DataTypeValidator)(from validator in validators where validator.GetType() == typeof(DataTypeValidator) select validator).FirstOrDefault();
+        TypeValidator typeValidator = (TypeValidator)(from validator in validators where validator.GetType() == typeof(TypeValidator) select validator).FirstOrDefault();
+        commandList["add"].Command = new CommandAdd(new IValidator[] {
+            typeValidator,
+            dataTypeValidator
+        }, errorOutput);
+    }
+
+    public ICommand GetCommandByName(string name)
+    {
+        ICommand command = commandList[name].Command;
         return command;
     }
 
     public int GetCommandArgsCountByName(string name)
     {
-        return CommandList[name].RequiredArgs.Count;
+        return commandList[name].RequiredArgs.Count;
     }
 
     public bool IsCommandExists(string name)
     {
-        if (CommandList.ContainsKey(name))
+        if (commandList.ContainsKey(name))
             return true;
         return false;
     }

@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
-
-
-public class LengthValidator : IValidator
+﻿public class LengthValidator : IValidator
 {
+    private CommandListener commandListener;
+    public LengthValidator(CommandListener _commandListener)
+    {
+        commandListener = _commandListener;
+    }
     public ValidatorResult Validate(string data)
     {
-        CommandListener commandListener = new CommandListener();
         string[] args = data.Split(' ');
         string commandName = args[0];
         int argsC = commandListener.GetCommandArgsCountByName(commandName);
@@ -15,4 +16,3 @@ public class LengthValidator : IValidator
         return new ValidatorResult(ErrorCode.NO_ERROR);
     }
 }
-

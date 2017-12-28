@@ -6,12 +6,13 @@ public class CommandAdd : ICommand
 {
     IValidator[] validators;    //[0] => TypeValidator,  [1] => DataTypeValidator
     IErrorOutput errorOutput;
-    public CommandAdd(IValidator[] _validators)
+    public CommandAdd(IValidator[] _validators, IErrorOutput _errorOutput)
     {
         validators = _validators;
+        errorOutput = _errorOutput;
     }
 
-    public void Execute(List<string> args, BookContext bookContext)
+    public void Execute(IList<string> args, BookContext bookContext)
     {
         string type = args[0];
         ValidatorResult validatorResult = validators[0].Validate(type);
@@ -37,9 +38,4 @@ public class CommandAdd : ICommand
         else
             errorOutput.WriteError(validatorResult.ErrorCode);
     }
-
-    public void SetErrorOutput(IErrorOutput _errorOutput)
-    {
-        errorOutput = _errorOutput;
-    }
-}   
+}       
