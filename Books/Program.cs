@@ -11,7 +11,6 @@ namespace Books
             Console.WriteLine("/add <book/author>");
             Console.WriteLine("/stop");
 
-            ICommand commandToExecute = null;
             ConsoleErrorOutput errorOutput = new ConsoleErrorOutput();
             TypeValidator typeValidator = new TypeValidator();
             DataTypeValidator dataTypeValidator = new DataTypeValidator();
@@ -27,24 +26,11 @@ namespace Books
             CommandSplit commandSplit = new CommandSplit(errorOutput);
             CommandExecutor command = new CommandExecutor(lengthValidator, errorOutput, bC);
             InputReader inputReader = new InputReader();
-            ValidatorResult validatorResult = null;
-
+            LineInterpreter lineInterpreter = new LineInterpreter(commandExistsValidator, errorOutput, commandSplit, commandManager, command);
             while (true)
             {
                 string line = inputReader.ReadInput();
-                List<string> data = (List<string>)commandSplit.Split(line);
-                if (data != null && data.Count > 0)
-                {
-                    string commandName = data[0];
-                    validatorResult = commandExistsValidator.Validate(commandName);
-                    if (validatorResult.Success)
-                    {
-                        commandToExecute = commandManager.GetCommandByName(commandName);
-                        command.ExecuteCommand(commandToExecute, data);
-                    }
-                    else
-                        errorOutput.WriteError(validatorResult.ErrorCode);
-                }
+                lineInterpreter.Interpret(line);
             }
         }
     }

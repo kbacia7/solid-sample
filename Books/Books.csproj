@@ -57,6 +57,7 @@
     <Compile Include="Errors\ConsoleErrorOutput.cs" />
     <Compile Include="Errors\IErrorOutput.cs" />
     <Compile Include="InputReader.cs" />
+    <Compile Include="LineInterpreter.cs" />
     <Compile Include="Migrations\201712261046129_Initial.cs" />
     <Compile Include="Migrations\201712261046129_Initial.Designer.cs">
       <DependentUpon>201712261046129_Initial.cs</DependentUpon>
