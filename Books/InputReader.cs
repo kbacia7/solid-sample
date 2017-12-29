@@ -4,6 +4,10 @@ public class InputReader
 {
     public string ReadInput()
     {
-        return Console.ReadLine();
+        string input = Console.ReadLine();
+        if (input != null && input.Length > 0)
+            return input;
+        else
+            return ReadInput();
     }
 }

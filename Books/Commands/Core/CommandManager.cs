@@ -2,50 +2,41 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class CommandListener
+public class CommandManager
 {
-    Dictionary<string, CommandParams> commandList = new Dictionary<string, CommandParams>()
+    CommandRegistration commandRegistration;
+    public CommandManager(IValidator[] validators, IErrorOutput errorOutput, CommandRegistration _commandRegistration)
     {
-         {
-            "add",
-            new CommandParams()
-            { 
-                RequiredArgs = new Dictionary<string, Type>()
-                {
-                    { "type", typeof(string)}
-                }
-            }
-        }
-    };
-    public Dictionary<string, CommandParams> CommandList
-    {
-        get { return commandList; }
-    }
+        commandRegistration = _commandRegistration;
 
-    public CommandListener(IValidator[] validators, IErrorOutput errorOutput)
-    {
+        //Validators for commands
         DataTypeValidator dataTypeValidator = (DataTypeValidator)(from validator in validators where validator.GetType() == typeof(DataTypeValidator) select validator).FirstOrDefault();
         TypeValidator typeValidator = (TypeValidator)(from validator in validators where validator.GetType() == typeof(TypeValidator) select validator).FirstOrDefault();
-        commandList["add"].Command = new CommandAdd(new IValidator[] {
+
+        CommandAdd commandAdd = new CommandAdd(new IValidator[] {
             typeValidator,
             dataTypeValidator
         }, errorOutput);
+        CommandStop commandStop = new CommandStop(errorOutput);
+
+        commandRegistration.RegisterCommand("add", commandAdd);
+        commandRegistration.RegisterCommand("stop", commandStop);
     }
 
     public ICommand GetCommandByName(string name)
     {
-        ICommand command = commandList[name].Command;
+        ICommand command = commandRegistration.CommandList[name].Command;
         return command;
     }
 
     public int GetCommandArgsCountByName(string name)
     {
-        return commandList[name].RequiredArgs.Count;
+        return commandRegistration.CommandList[name].RequiredArgs.Count;
     }
 
     public bool IsCommandExists(string name)
     {
-        if (commandList.ContainsKey(name))
+        if (commandRegistration.CommandList.ContainsKey(name))
             return true;
         return false;
     }

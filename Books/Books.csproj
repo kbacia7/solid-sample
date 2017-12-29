@@ -50,8 +50,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CommandAdd.cs" />
-    <Compile Include="Commands\CommandListener.cs" />
-    <Compile Include="Commands\CommandParams.cs" />
+    <Compile Include="Commands\Core\CommandManager.cs" />
+    <Compile Include="Commands\Core\CommandParams.cs" />
+    <Compile Include="Commands\CommandStop.cs" />
+    <Compile Include="Commands\Core\CommandRegistration.cs" />
     <Compile Include="Errors\ConsoleErrorOutput.cs" />
     <Compile Include="Errors\IErrorOutput.cs" />
     <Compile Include="InputReader.cs" />
@@ -65,9 +67,8 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Validators\CommandExistsValidator.cs" />
-    <Compile Include="Validators\CommandFormatValidator.cs" />
-    <Compile Include="Commands\CommandExecutor.cs" />
-    <Compile Include="Commands\ICommand.cs" />
+    <Compile Include="Commands\Core\CommandExecutor.cs" />
+    <Compile Include="Commands\Core\ICommand.cs" />
     <Compile Include="Context\BookContext.cs" />
     <Compile Include="Validators\DataTypeValidator.cs" />
     <Compile Include="Validators\ErrorCode.cs" />
@@ -75,7 +76,7 @@
     <Compile Include="CModel\CModel.cs" />
     <Compile Include="Model\Author.cs" />
     <Compile Include="Model\Book.cs" />
-    <Compile Include="Commands\ParseCommand.cs" />
+    <Compile Include="Commands\Core\CommandSplit.cs" />
     <Compile Include="Validators\LengthValidator.cs" />
     <Compile Include="Validators\TypeValidator.cs" />
     <Compile Include="Validators\ValidatorResult.cs" />
@@ -96,5 +97,6 @@
       <DependentUpon>201712261051060_ForeignKeys.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
