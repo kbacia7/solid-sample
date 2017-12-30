@@ -23,6 +23,7 @@ public class CommandRegistration
             }
         }
     };
+
     public Dictionary<string, CommandParams> CommandList
     {
         get { return commandList; }

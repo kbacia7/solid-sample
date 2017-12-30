@@ -4,8 +4,9 @@ using System.Reflection;
 
 public class CommandAdd : ICommand
 {
-    IValidator[] validators;    //[0] => TypeValidator,  [1] => DataTypeValidator
-    IErrorOutput errorOutput;
+    private IValidator[] validators;    //[0] => TypeValidator,  [1] => DataTypeValidator
+    private IErrorOutput errorOutput;
+
     public CommandAdd(IValidator[] _validators, IErrorOutput _errorOutput)
     {
         validators = _validators;

@@ -1,10 +1,12 @@
 ﻿public class LengthValidator : IValidator
 {
     private CommandManager commandManager;
+
     public LengthValidator(CommandManager _commandManager)
     {
         commandManager = _commandManager;
     }
+
     public ValidatorResult Validate(string data)
     {
         string[] args = data.Split(' ');

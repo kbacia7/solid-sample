@@ -9,7 +9,6 @@ public class ConsoleErrorOutput : IErrorOutput
         {ErrorCode.INVALID_LEN_ARGS, "Invalid number of args!"},
         {ErrorCode.INVALID_DATA_TYPE, "Invalid data type!" },
         {ErrorCode.COMMAND_NOT_EXISTS, "This command does not exist!" }
-
     };
 
     public void WriteError(ErrorCode errorCode)

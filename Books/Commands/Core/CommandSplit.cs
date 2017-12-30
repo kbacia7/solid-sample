@@ -3,7 +3,8 @@ using System.Linq;
 
 public class CommandSplit
 {
-    IErrorOutput errorOutput;
+    private IErrorOutput errorOutput;
+
     public CommandSplit(IErrorOutput _errorOutput)
     {
         errorOutput = _errorOutput;

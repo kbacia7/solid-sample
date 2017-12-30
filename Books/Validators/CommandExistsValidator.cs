@@ -1,10 +1,12 @@
 ﻿public class CommandExistsValidator : IValidator
 {
     private CommandManager commandManager;
+
     public CommandExistsValidator(CommandManager _commandManager)
     {
         commandManager = _commandManager;
     }
+
     public ValidatorResult Validate(string commandName)
     {
         if (commandManager.IsCommandExists(commandName))

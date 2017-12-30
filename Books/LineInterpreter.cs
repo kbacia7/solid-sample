@@ -2,11 +2,12 @@
 
 public class LineInterpreter
 {
-    CommandSplit commandSplit;
-    IValidator validator; //CommandExistsValidator
-    IErrorOutput errorOutput;
-    CommandManager commandManager;
-    CommandExecutor commandExecutor;
+    private CommandSplit commandSplit;
+    private IValidator validator; //CommandExistsValidator
+    private IErrorOutput errorOutput;
+    private CommandManager commandManager;
+    private CommandExecutor commandExecutor;
+
     public LineInterpreter(IValidator _validator, IErrorOutput _errorOutput, CommandSplit _commandSplit, CommandManager _commandManager, CommandExecutor _commandExecutor)
     {
         validator = _validator;
@@ -15,6 +16,7 @@ public class LineInterpreter
         commandManager = _commandManager;
         commandExecutor = _commandExecutor;
     }
+
     public void Interpret(string line)
     {
         ValidatorResult validatorResult = null;

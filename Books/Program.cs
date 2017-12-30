@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Books
 {
@@ -18,15 +17,18 @@ namespace Books
             {
                 dataTypeValidator, typeValidator
             };
+
             CommandRegistration commandRegistration = new CommandRegistration();
             CommandManager commandManager = new CommandManager(validators, errorOutput, commandRegistration);
             LengthValidator lengthValidator = new LengthValidator(commandManager);
             CommandExistsValidator commandExistsValidator = new CommandExistsValidator(commandManager);
+
             BookContext bC = new BookContext();
             CommandSplit commandSplit = new CommandSplit(errorOutput);
             CommandExecutor command = new CommandExecutor(lengthValidator, errorOutput, bC);
             InputReader inputReader = new InputReader();
             LineInterpreter lineInterpreter = new LineInterpreter(commandExistsValidator, errorOutput, commandSplit, commandManager, command);
+
             while (true)
             {
                 string line = inputReader.ReadInput();

@@ -2,13 +2,10 @@
 {
     public readonly bool Success;
     public readonly ErrorCode ErrorCode;
+
     public ValidatorResult(ErrorCode error)
     {
-        if (error == ErrorCode.NO_ERROR)
-            Success = true;
-        else
-            Success = false;
+        Success = (error != ErrorCode.NO_ERROR) ? (false) : (true);
         ErrorCode = error;
     }
-    
 }

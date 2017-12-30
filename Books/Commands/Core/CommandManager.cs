@@ -4,7 +4,8 @@ using System.Linq;
 
 public class CommandManager
 {
-    CommandRegistration commandRegistration;
+    private CommandRegistration commandRegistration;
+
     public CommandManager(IValidator[] validators, IErrorOutput errorOutput, CommandRegistration _commandRegistration)
     {
         commandRegistration = _commandRegistration;
