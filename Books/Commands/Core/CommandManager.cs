@@ -4,40 +4,40 @@ using System.Linq;
 
 public class CommandManager
 {
-    private CommandRegistration commandRegistration;
+    public CommandRegistration CommandRegistration { get; set; }
+    public IErrorOutput ErrorOutput { get; set; }
+    public IValidator[] Validators { get; set; }
 
-    public CommandManager(IValidator[] validators, IErrorOutput errorOutput, CommandRegistration _commandRegistration)
+
+    public void RegisterCommands()
     {
-        commandRegistration = _commandRegistration;
-
-        //Validators for commands
-        DataTypeValidator dataTypeValidator = (DataTypeValidator)(from validator in validators where validator.GetType() == typeof(DataTypeValidator) select validator).FirstOrDefault();
-        TypeValidator typeValidator = (TypeValidator)(from validator in validators where validator.GetType() == typeof(TypeValidator) select validator).FirstOrDefault();
+        DataTypeValidator dataTypeValidator = (DataTypeValidator)(from validator in Validators where validator.GetType() == typeof(DataTypeValidator) select validator).FirstOrDefault();
+        TypeValidator typeValidator = (TypeValidator)(from validator in Validators where validator.GetType() == typeof(TypeValidator) select validator).FirstOrDefault();
 
         CommandAdd commandAdd = new CommandAdd(new IValidator[] {
             typeValidator,
             dataTypeValidator
-        }, errorOutput);
-        CommandStop commandStop = new CommandStop(errorOutput);
+        }, ErrorOutput);
+        CommandStop commandStop = new CommandStop(ErrorOutput);
 
-        commandRegistration.RegisterCommand("add", commandAdd);
-        commandRegistration.RegisterCommand("stop", commandStop);
+        CommandRegistration.RegisterCommand("add", commandAdd);
+        CommandRegistration.RegisterCommand("stop", commandStop);
     }
 
     public ICommand GetCommandByName(string name)
     {
-        ICommand command = commandRegistration.CommandList[name].Command;
+        ICommand command = CommandRegistration.CommandList[name].Command;
         return command;
     }
 
     public int GetCommandArgsCountByName(string name)
     {
-        return commandRegistration.CommandList[name].RequiredArgs.Count;
+        return CommandRegistration.CommandList[name].RequiredArgs.Count;
     }
 
     public bool IsCommandExists(string name)
     {
-        if (commandRegistration.CommandList.ContainsKey(name))
+        if (CommandRegistration.CommandList.ContainsKey(name))
             return true;
         return false;
     }

@@ -3,12 +3,7 @@ using System.Linq;
 
 public class CommandSplit
 {
-    private IErrorOutput errorOutput;
-
-    public CommandSplit(IErrorOutput _errorOutput)
-    {
-        errorOutput = _errorOutput;
-    }
+    public IErrorOutput ErrorOutput { get; set; }
 
     public IList<string> Split(string command)
     {

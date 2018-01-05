@@ -2,27 +2,25 @@
 
 public class CommandExecutor
 {
-    private BookContext BookContext;
-    private IValidator validator; //lengthValidator
-    private IErrorOutput errorOutput;
+    public BookContext BookContext { get; set; } 
+    public IErrorOutput ErrorOutput { get; set; }
+    private IValidator Validator; //lengthValidator
 
-    public CommandExecutor(IValidator _validator, IErrorOutput _errorOutput, BookContext bookContext)
+    public CommandExecutor(IValidator validator)
     {
-        validator = _validator;
-        errorOutput = _errorOutput;
-        BookContext = bookContext;
+        Validator = validator;
     }
 
     public void ExecuteCommand(ICommand command, IList<string> args)
     {
         string data = string.Join(" ", args);
-        ValidatorResult res = validator.Validate(data);
+        ValidatorResult res = Validator.Validate(data);
         if (res.Success)
         {
             args.RemoveAt(0);
             command.Execute(args, BookContext);
         }
         else
-            errorOutput.WriteError(res.ErrorCode);
+            ErrorOutput.WriteError(res.ErrorCode);
     } 
 }

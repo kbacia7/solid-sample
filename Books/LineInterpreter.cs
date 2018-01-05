@@ -2,36 +2,33 @@
 
 public class LineInterpreter
 {
-    private CommandSplit commandSplit;
-    private IValidator validator; //CommandExistsValidator
-    private IErrorOutput errorOutput;
-    private CommandManager commandManager;
-    private CommandExecutor commandExecutor;
+    public CommandSplit CommandSplit { get; set; }
+    public IValidator validator { get; set; }//CommandExistsValidator
+    public IErrorOutput ErrorOutput { get; set; }
+    public CommandManager CommandManager { get; set; }
+    public CommandExecutor CommandExecutor { get; set; }
 
-    public LineInterpreter(IValidator _validator, IErrorOutput _errorOutput, CommandSplit _commandSplit, CommandManager _commandManager, CommandExecutor _commandExecutor)
+
+    public LineInterpreter(IValidator _validator)
     {
         validator = _validator;
-        errorOutput = _errorOutput;
-        commandSplit = _commandSplit;
-        commandManager = _commandManager;
-        commandExecutor = _commandExecutor;
     }
 
     public void Interpret(string line)
     {
         ValidatorResult validatorResult = null;
-        List<string> data = (List<string>)commandSplit.Split(line);
+        List<string> data = (List<string>)CommandSplit.Split(line);
         if (data != null && data.Count > 0)
         {
             string commandName = data[0];
             validatorResult = validator.Validate(commandName);
             if (validatorResult.Success)
             {
-                ICommand commandToExecute = commandManager.GetCommandByName(commandName);
-                commandExecutor.ExecuteCommand(commandToExecute, data);
+                ICommand commandToExecute = CommandManager.GetCommandByName(commandName);
+                CommandExecutor.ExecuteCommand(commandToExecute, data);
             }
             else
-                errorOutput.WriteError(validatorResult.ErrorCode);
+                ErrorOutput.WriteError(validatorResult.ErrorCode);
         }
     }
 }

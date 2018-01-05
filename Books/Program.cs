@@ -1,38 +1,66 @@
-﻿using System;
+﻿using Autofac;
+using Autofac.Core;
+using System;
+using System.Reflection;
 
 namespace Books
 {
     class Program
     {
+        static IContainer container;
         static void Main(string[] args)
         {
+            var assembly = Assembly.GetExecutingAssembly();
+            var builder = new ContainerBuilder();
+            builder.RegisterAssemblyTypes(assembly)
+                .AsSelf()
+                .AsImplementedInterfaces()
+                .SingleInstance();
+
+            builder.RegisterType<LengthValidator>()           
+                .AsSelf()         
+                .AsImplementedInterfaces()  
+                .Named<IValidator>("lengthValidator")  
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)            
+                .SingleInstance();
+
+            builder.RegisterType<CommandExistsValidator>()
+                .AsSelf()
+                .AsImplementedInterfaces()
+                .Named<IValidator>("commandExists")
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
+                .SingleInstance();
+
+            builder.RegisterType<CommandExecutor>()                  
+                .AsSelf()                   
+                .WithParameter(ResolvedParameter.ForNamed<IValidator>("lengthValidator"))                  
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)  
+                .SingleInstance();
+
+            builder.RegisterType<CommandManager>()
+                .AsSelf()
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
+                .SingleInstance();
+
+            builder.RegisterType<LineInterpreter>()
+                .AsSelf()
+                .WithParameter(ResolvedParameter.ForNamed<IValidator>("commandExists"))
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
+                .SingleInstance();
+
+            container = builder.Build();
             Console.WriteLine("Commands: ");
             Console.WriteLine("/add <book/author>");
             Console.WriteLine("/stop");
 
-            ConsoleErrorOutput errorOutput = new ConsoleErrorOutput();
-            TypeValidator typeValidator = new TypeValidator();
-            DataTypeValidator dataTypeValidator = new DataTypeValidator();
-            IValidator[] validators = new IValidator[]
+            using (var scope = container.BeginLifetimeScope())
             {
-                dataTypeValidator, typeValidator
-            };
-
-            CommandRegistration commandRegistration = new CommandRegistration();
-            CommandManager commandManager = new CommandManager(validators, errorOutput, commandRegistration);
-            LengthValidator lengthValidator = new LengthValidator(commandManager);
-            CommandExistsValidator commandExistsValidator = new CommandExistsValidator(commandManager);
-
-            BookContext bC = new BookContext();
-            CommandSplit commandSplit = new CommandSplit(errorOutput);
-            CommandExecutor command = new CommandExecutor(lengthValidator, errorOutput, bC);
-            InputReader inputReader = new InputReader();
-            LineInterpreter lineInterpreter = new LineInterpreter(commandExistsValidator, errorOutput, commandSplit, commandManager, command);
-
-            while (true)
-            {
-                string line = inputReader.ReadInput();
-                lineInterpreter.Interpret(line);
+                scope.Resolve<CommandManager>().RegisterCommands();
+                while (true)
+                {
+                    string line = scope.Resolve<InputReader>().ReadInput();
+                    scope.Resolve<LineInterpreter>().Interpret(line);
+                }
             }
         }
     }
