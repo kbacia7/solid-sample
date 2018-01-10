@@ -1,9 +1,15 @@
-﻿using System.Linq;
+﻿using Ninject;
+using System.Linq;
 
 public class CommandManager
 {
+    [Inject]
     public CommandRegistration CommandRegistration { get; set; }
+
+    [Inject]
     public IErrorOutput ErrorOutput { get; set; }
+
+    [Inject]
     public IValidator[] Validators { get; set; }
 
 

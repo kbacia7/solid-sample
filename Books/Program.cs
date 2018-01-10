@@ -1,29 +1,24 @@
-﻿using Autofac;
+﻿using Ninject;
 using System;
-using System.ComponentModel;
 
 namespace Books
 {
     class Program
-    { 
+    {
         static void Main(string[] args)
         {
-            ContainerBuild containerBuild = new ContainerBuild();
-            containerBuild.Build();
-            var container = containerBuild.GetContainer();
-           
+            KernelBuild kernelBuild = new KernelBuild();
+            kernelBuild.Build();
+            IKernel kernel = kernelBuild.GetKernel();
+
             Console.WriteLine("Commands: ");
             Console.WriteLine("/add <book/author>");
             Console.WriteLine("/stop");
-
-            using (var scope = container.BeginLifetimeScope())
+            kernel.Get<CommandManager>().RegisterCommands();
+            while (true)
             {
-                scope.Resolve<CommandManager>().RegisterCommands();
-                while (true)
-                {
-                    string line = scope.Resolve<InputReader>().ReadInput();
-                    scope.Resolve<LineInterpreter>().Interpret(line);
-                }
+                string line = kernel.Get<InputReader>().ReadInput();
+                kernel.Get<LineInterpreter>().Interpret(line);
             }
         }
     }

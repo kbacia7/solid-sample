@@ -1,5 +1,8 @@
-﻿public class CommandExistsValidator : IValidator
+﻿using Ninject;
+
+public class CommandExistsValidator : IValidator
 {
+    [Inject]
     public CommandManager CommandManager { get; set; }
 
     public ValidatorResult Validate(string commandName)

@@ -1,5 +1,8 @@
-﻿public class LengthValidator : IValidator
+﻿using Ninject;
+
+public class LengthValidator : IValidator
 {
+    [Inject]
     public CommandManager CommandManager { get; set; }
 
     public ValidatorResult Validate(string data)

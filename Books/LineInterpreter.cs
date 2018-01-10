@@ -1,18 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using Ninject;
+using System.Collections.Generic;
 
 public class LineInterpreter
 {
+    [Inject]
     public CommandSplit CommandSplit { get; set; }
+
+    [Inject]
     public IValidator validator { get; set; }//CommandExistsValidator
+
+    [Inject]
     public IErrorOutput ErrorOutput { get; set; }
+
+    [Inject]
     public CommandManager CommandManager { get; set; }
+
+    [Inject]
     public CommandExecutor CommandExecutor { get; set; }
 
-
-    public LineInterpreter(IValidator _validator)
-    {
-        validator = _validator;
-    }
 
     public void Interpret(string line)
     {

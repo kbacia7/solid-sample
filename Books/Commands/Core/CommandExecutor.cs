@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using Ninject;
+using System.Collections.Generic;
 
 public class CommandExecutor
 {
-    public BookContext BookContext { get; set; } 
-    public IErrorOutput ErrorOutput { get; set; }
-    private IValidator Validator; //lengthValidator
+    [Inject]
+    public BookContext BookContext { get; set; }
 
-    public CommandExecutor(IValidator validator)
-    {
-        Validator = validator;
-    }
+    [Inject]
+    public IErrorOutput ErrorOutput { get; set; }
+
+    [Inject]
+    public IValidator Validator { get; set; } //lengthValidator
 
     public void ExecuteCommand(ICommand command, IList<string> args)
     {
