@@ -74,7 +74,7 @@
       <DependentUpon>201712261051060_ForeignKeys.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Model\ContainerBuild.cs" />
+    <Compile Include="ContainerBuild.cs" />
     <Compile Include="Validators\CommandExistsValidator.cs" />
     <Compile Include="Commands\Core\CommandExecutor.cs" />
     <Compile Include="Commands\Core\ICommand.cs" />
