@@ -13,44 +13,57 @@ namespace Books
             Console.WriteLine("/remove <book/author> <ID>");
             Console.WriteLine("/stop");
 
-            BookContext bC = new BookContext();
-            ConsoleErrorOutput errorOutput = new ConsoleErrorOutput();
+            BookContext bookContext = new BookContext();
+
+            //Validators
             TableNameValidator tableNameValidator = new TableNameValidator();
             CorrectFloatDataValidator correctFloatData = new CorrectFloatDataValidator();
             CorrectIntDataValidator correctIntData = new CorrectIntDataValidator();
-           
+
+            //Default Errour Output, empty Book & Author objects for managers and Input Reader
+            ConsoleErrorOutput consoleErrorOutput = new ConsoleErrorOutput();
             Book book = new Book();
             Author author = new Author();
             InputReader inputReader = new InputReader();
 
+            //Array with validators for managers
             IValidator[] validatorsForManagers = new IValidator[]
             {
                 correctIntData, correctFloatData
             };
-            BookManager bookManager = new BookManager(validatorsForManagers, book, inputReader, bC);
-            AuthorManager authorManager = new AuthorManager(validatorsForManagers[0], author, inputReader, bC);
 
+            //Managers
+            BookManager bookManager = new BookManager(validatorsForManagers, book, inputReader, bookContext);
+            AuthorManager authorManager = new AuthorManager(validatorsForManagers[0], author, inputReader, bookContext);
+
+            //Validators that require managers
             BookExistsValidator bookExistsValidator = new BookExistsValidator(bookManager);
             AuthorExistsValidator authorExistsValidator = new AuthorExistsValidator(authorManager);
 
+            //Array with validators for command manager
             IValidator[] validators = new IValidator[]
             {
                tableNameValidator, correctFloatData, correctIntData, bookExistsValidator, authorExistsValidator
             };
             
+            //And array with managers for command manager
             IManager[] managers = new IManager[]
             {
                 authorManager, bookManager
             };
 
+           
             CommandRegistration commandRegistration = new CommandRegistration();
-            CommandManager commandManager = new CommandManager(validators, errorOutput, managers, commandRegistration);
+
+            //Command manager & validators that require command manager
+            CommandManager commandManager = new CommandManager(validators, consoleErrorOutput, managers, commandRegistration);
             LengthValidator lengthValidator = new LengthValidator(commandManager);
             CommandExistsValidator commandExistsValidator = new CommandExistsValidator(commandManager);
-
-            CommandSplit commandSplit = new CommandSplit(errorOutput);
-            CommandExecutor command = new CommandExecutor(lengthValidator, errorOutput, bC);
-            LineInterpreter lineInterpreter = new LineInterpreter(commandExistsValidator, errorOutput, commandSplit, commandManager, command);
+            
+            //Command Split, executor commands and interpreter
+            CommandSplit commandSplit = new CommandSplit(consoleErrorOutput);
+            CommandExecutor commandExecutor = new CommandExecutor(lengthValidator, consoleErrorOutput, bookContext);
+            LineInterpreter lineInterpreter = new LineInterpreter(commandExistsValidator, consoleErrorOutput, commandSplit, commandManager, commandExecutor);
 
             while (true)
             {

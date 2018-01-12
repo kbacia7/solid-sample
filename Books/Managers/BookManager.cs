@@ -4,25 +4,25 @@ using System.Linq;
 public class BookManager : IManager
 {
     private IValidator[] validators; //INt, float
-    private Book NewBook;
-    private InputReader InputReader;
-    private BookContext BookContext;
+    private Book newBook;
+    private InputReader inputReader;
+    private BookContext bookContext;
 
     public BookManager(IValidator[] _validators, Book _newBook, InputReader _inputReader, BookContext _bookContext)
     {
         validators = _validators;
-        NewBook = _newBook;
-        InputReader = _inputReader;
-        BookContext = _bookContext;
+        newBook = _newBook;
+        inputReader = _inputReader;
+        bookContext = _bookContext;
     }
 
     public void Add()
     {
         ValidatorResult validatorResult = null;
-        Book copy = NewBook;
+        Book copy = newBook;
 
         Console.Write("Name: ");
-        NewBook.Name = Console.ReadLine();
+        newBook.Name = Console.ReadLine();
 
         for (; ; )
         {
@@ -31,7 +31,7 @@ public class BookManager : IManager
             validatorResult = validators[1].Validate(input);
             if (validatorResult.Success)
             {
-                NewBook.Price = float.Parse(input);
+                newBook.Price = float.Parse(input);
                 break;
             }
         }
@@ -43,25 +43,25 @@ public class BookManager : IManager
             validatorResult = validators[0].Validate(input);
             if (validatorResult.Success)
             {
-                NewBook.Author_ID = int.Parse(input);
+                newBook.Author_ID = int.Parse(input);
                 break;
             }
         }
-        BookContext.Books.Add(NewBook);
-        BookContext.SaveChanges();
-        NewBook = copy;
+        bookContext.Books.Add(newBook);
+        bookContext.SaveChanges();
+        newBook = copy;
     }
 
     public void Remove(int ID)
     {
-        BookContext.Books.Remove(BookContext.Books.Where(book => book.ID == ID).Select(b => b).First());
+        bookContext.Books.Remove(bookContext.Books.Where(book => book.ID == ID).Select(b => b).First());
         Console.WriteLine("Remove book with ID " + ID);
-        BookContext.SaveChanges();
+        bookContext.SaveChanges();
     }
 
     public void List()
     {
-        foreach(Book b in BookContext.Books)
+        foreach(Book b in bookContext.Books)
         {
             Console.WriteLine("ID: " + b.ID);
             Console.WriteLine("Name: " + b.Name);
@@ -84,7 +84,7 @@ public class BookManager : IManager
 
     public CModel IsExists(int ID)
     {
-        Book findBook = (from a in BookContext.Books where a.ID == ID select a).FirstOrDefault();
+        Book findBook = (from a in bookContext.Books where a.ID == ID select a).FirstOrDefault();
         return findBook;
     }
 }

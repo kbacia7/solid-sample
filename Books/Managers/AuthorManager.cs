@@ -3,57 +3,57 @@ using System.Linq;
 
 public class AuthorManager : IManager
 {
-    private IValidator validator; //INt
-    private Author NewAuthor;
-    private InputReader InputReader;
-    private BookContext BookContext;
+    private IValidator validator; //IntData
+    private Author newAuthor;
+    private InputReader inputReader;
+    private BookContext bookContext;
 
     public AuthorManager(IValidator _validator, Author _newAuthor, InputReader _inputReader, BookContext _bookContext)
     {
         validator = _validator;
-        NewAuthor = _newAuthor;
-        InputReader = _inputReader;
-        BookContext = _bookContext;
+        newAuthor = _newAuthor;
+        inputReader = _inputReader;
+        bookContext = _bookContext;
     }
 
     public void Add()
     {
         ValidatorResult validatorResult = null;
-        Author copy = NewAuthor;
+        Author copy = newAuthor;
 
         Console.Write("First Name: ");
-        NewAuthor.FirstName = InputReader.ReadInput();
+        newAuthor.FirstName = inputReader.ReadInput();
 
         Console.Write("Last Name: ");
-        NewAuthor.LastName = InputReader.ReadInput();
+        newAuthor.LastName = inputReader.ReadInput();
 
         for (; ; )
         {
             Console.Write("Age: ");
-            string input = InputReader.ReadInput();
+            string input = inputReader.ReadInput();
             validatorResult = validator.Validate(input);
             if (validatorResult.Success)
             {
-                NewAuthor.Age = int.Parse(input);
+                newAuthor.Age = int.Parse(input);
                 break;
             }
         }
-        BookContext.Authors.Add(NewAuthor);
-        BookContext.SaveChanges();
+        bookContext.Authors.Add(newAuthor);
+        bookContext.SaveChanges();
 
-        NewAuthor = copy;
+        newAuthor = copy;
     }
 
     public void Remove(int ID)
     {
-        BookContext.Authors.Remove(BookContext.Authors.Where(author => author.ID == ID).Select(auth => auth).First());
+        bookContext.Authors.Remove(bookContext.Authors.Where(author => author.ID == ID).Select(auth => auth).First());
         Console.WriteLine("Remove author with ID " + ID);
-        BookContext.SaveChanges();
+        bookContext.SaveChanges();
     }
 
     public void List()
     {
-        foreach(Author a in BookContext.Authors)
+        foreach(Author a in bookContext.Authors)
         {
             Console.WriteLine("ID: " + a.ID);
             Console.WriteLine("First Name: " + a.FirstName);
@@ -76,7 +76,7 @@ public class AuthorManager : IManager
 
     public CModel IsExists(int ID)
     {
-        Author findAuthor = (from a in BookContext.Authors where a.ID == ID select a).FirstOrDefault();
+        Author findAuthor = (from a in bookContext.Authors where a.ID == ID select a).FirstOrDefault();
         return findAuthor;
     }
 }

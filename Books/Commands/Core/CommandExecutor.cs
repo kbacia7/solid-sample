@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class CommandExecutor
 {
-    private BookContext BookContext;
+    private BookContext bookContext;
     private IValidator validator; //lengthValidator
     private IErrorOutput errorOutput;
 
@@ -11,7 +11,7 @@ public class CommandExecutor
     {
         validator = _validator;
         errorOutput = _errorOutput;
-        BookContext = bookContext;
+        this.bookContext = bookContext;
     }
 
     public void ExecuteCommand(ICommand command, IList<string> args)
@@ -22,7 +22,7 @@ public class CommandExecutor
         {
             args.RemoveAt(0);
             Console.WriteLine(); //Space
-            command.Execute(args, BookContext);
+            command.Execute(args, bookContext);
             Console.WriteLine();
         }
         else
