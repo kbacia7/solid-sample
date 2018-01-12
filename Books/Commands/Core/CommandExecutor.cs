@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 public class CommandExecutor
 {
@@ -20,7 +21,9 @@ public class CommandExecutor
         if (res.Success)
         {
             args.RemoveAt(0);
+            Console.WriteLine(); //Space
             command.Execute(args, BookContext);
+            Console.WriteLine();
         }
         else
             errorOutput.WriteError(res.ErrorCode);

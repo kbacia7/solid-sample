@@ -6,21 +6,39 @@ public class CommandManager
 {
     private CommandRegistration commandRegistration;
 
-    public CommandManager(IValidator[] validators, IErrorOutput errorOutput, CommandRegistration _commandRegistration)
+    public CommandManager(IValidator[] validators, IErrorOutput errorOutput, IManager[] managers, CommandRegistration _commandRegistration)
     {
         commandRegistration = _commandRegistration;
 
         //Validators for commands
-        DataTypeValidator dataTypeValidator = (DataTypeValidator)(from validator in validators where validator.GetType() == typeof(DataTypeValidator) select validator).FirstOrDefault();
-        TypeValidator typeValidator = (TypeValidator)(from validator in validators where validator.GetType() == typeof(TypeValidator) select validator).FirstOrDefault();
+        TableNameValidator tableNameValidator = (TableNameValidator)(from validator in validators where validator.GetType() == typeof(TableNameValidator) select validator).FirstOrDefault();
+        CorrectFloatDataValidator correctFloatDataValidator = (CorrectFloatDataValidator)(from validator in validators where validator.GetType() == typeof(CorrectFloatDataValidator) select validator).FirstOrDefault();
+        CorrectIntDataValidator correctIntDataValidator = (CorrectIntDataValidator)(from validator in validators where validator.GetType() == typeof(CorrectIntDataValidator) select validator).FirstOrDefault();
+        BookExistsValidator bookExistsValidator = (BookExistsValidator)(from validator in validators where validator.GetType() == typeof(BookExistsValidator) select validator).FirstOrDefault();
+        AuthorExistsValidator authorExistsValidator = (AuthorExistsValidator)(from validator in validators where validator.GetType() == typeof(AuthorExistsValidator) select validator).FirstOrDefault();
 
         CommandAdd commandAdd = new CommandAdd(new IValidator[] {
-            typeValidator,
-            dataTypeValidator
-        }, errorOutput);
-        CommandStop commandStop = new CommandStop(errorOutput);
+            tableNameValidator, correctIntDataValidator, correctFloatDataValidator
+        }, errorOutput, managers);
+
+        CommandView commandView = new CommandView(new IValidator[] {
+            tableNameValidator
+        }, errorOutput, managers);
+
+        CommandFind commandFind = new CommandFind(new IValidator[] {
+            tableNameValidator, correctIntDataValidator, bookExistsValidator, authorExistsValidator
+        }, errorOutput, managers);
+
+        CommandRemove commandRemove = new CommandRemove(new IValidator[] {
+            tableNameValidator, correctIntDataValidator, bookExistsValidator, authorExistsValidator
+        }, errorOutput, managers);
+
+        CommandStop commandStop = new CommandStop();
 
         commandRegistration.RegisterCommand("add", commandAdd);
+        commandRegistration.RegisterCommand("view", commandView);
+        commandRegistration.RegisterCommand("find", commandFind);
+        commandRegistration.RegisterCommand("remove", commandRemove);
         commandRegistration.RegisterCommand("stop", commandStop);
     }
 
