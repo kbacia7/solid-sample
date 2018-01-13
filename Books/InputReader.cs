@@ -10,4 +10,15 @@ public class InputReader
         else
             return ReadInput();
     }
+
+    public string ReadAs(Func<string, Boolean> condition)
+    {
+        string input = Console.ReadLine();
+        if (!condition(input))
+        {
+            return ReadAs(condition);
+        }
+        else
+            return input;
+    }
 }

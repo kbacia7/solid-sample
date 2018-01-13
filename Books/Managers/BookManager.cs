@@ -24,29 +24,23 @@ public class BookManager : IManager
         Console.Write("Name: ");
         newBook.Name = Console.ReadLine();
 
-        for (; ; )
-        {
-            Console.Write("Price: ");
-            string input = Console.ReadLine();
+
+        Console.Write("Price: ");
+        newBook.Price = float.Parse(inputReader.ReadAs((string input) => {
             validatorResult = validators[1].Validate(input);
             if (validatorResult.Success)
-            {
-                newBook.Price = float.Parse(input);
-                break;
-            }
-        }
+                return true;
+            return false;
+        }));
 
-        for (; ; )
-        {
-            Console.Write("Author ID: ");
-            string input = Console.ReadLine();
+        Console.Write("Author ID: ");
+        newBook.Author_ID = int.Parse(inputReader.ReadAs((string input) => {
             validatorResult = validators[0].Validate(input);
             if (validatorResult.Success)
-            {
-                newBook.Author_ID = int.Parse(input);
-                break;
-            }
-        }
+                return true;
+            return false;
+        }));
+
         bookContext.Books.Add(newBook);
         bookContext.SaveChanges();
         newBook = copy;

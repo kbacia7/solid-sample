@@ -27,17 +27,14 @@ public class AuthorManager : IManager
         Console.Write("Last Name: ");
         newAuthor.LastName = inputReader.ReadInput();
 
-        for (; ; )
-        {
-            Console.Write("Age: ");
-            string input = inputReader.ReadInput();
-            validatorResult = validator.Validate(input);
+        Console.Write("Age: ");
+        newAuthor.Age = int.Parse(inputReader.ReadAs((string s) => {
+            validatorResult = validator.Validate(s);
             if (validatorResult.Success)
-            {
-                newAuthor.Age = int.Parse(input);
-                break;
-            }
-        }
+                return true;
+            return false;
+        }));
+
         bookContext.Authors.Add(newAuthor);
         bookContext.SaveChanges();
 
