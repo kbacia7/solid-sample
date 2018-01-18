@@ -11,9 +11,12 @@ namespace Books
             ContainerBuild containerBuild = new ContainerBuild();
             containerBuild.Build();
             var container = containerBuild.GetContainer();
-           
+
             Console.WriteLine("Commands: ");
             Console.WriteLine("/add <book/author>");
+            Console.WriteLine("/view <book/author>");
+            Console.WriteLine("/find <book/author> <ID>");
+            Console.WriteLine("/remove <book/author> <ID>");
             Console.WriteLine("/stop");
 
             using (var scope = container.BeginLifetimeScope())

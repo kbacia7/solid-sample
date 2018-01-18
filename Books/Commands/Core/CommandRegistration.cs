@@ -16,6 +16,38 @@ public class CommandRegistration
             }
         },
         {
+            "view",
+            new CommandParams()
+            {
+                RequiredArgs = new Dictionary<string, Type>()
+                {
+                    { "type", typeof(string)}
+                }
+            }
+        },
+        {
+            "find",
+            new CommandParams()
+            {
+                RequiredArgs = new Dictionary<string, Type>()
+                {
+                    {"type", typeof(string) },
+                    {"ID", typeof(int) }
+                }
+            }
+        },
+        {
+            "remove",
+            new CommandParams()
+            {
+                RequiredArgs = new Dictionary<string, Type>()
+                {
+                    {"type", typeof(string) },
+                    {"ID", typeof(int) }
+                }
+            }
+        },
+        {
             "stop",
             new CommandParams()
             {

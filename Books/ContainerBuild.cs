@@ -16,6 +16,36 @@ public class ContainerBuild
             .AsImplementedInterfaces()
             .SingleInstance();
 
+        builder.RegisterType<CorrectIntDataValidator>()
+            .AsSelf()
+            .AsImplementedInterfaces()
+            .Named<IValidator>("correctIntValidator")
+            .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
+            .SingleInstance();
+
+        builder.RegisterType<CorrectFloatDataValidator>()
+            .AsSelf()
+            .AsImplementedInterfaces()
+            .Named<IValidator>("correctFloatValidator")
+            .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
+            .SingleInstance();
+
+        builder.RegisterType<AuthorManager>()
+            .AsSelf()
+            .AsImplementedInterfaces()
+            .WithParameter(ResolvedParameter.ForNamed<IValidator>("correctIntValidator"))
+            .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
+            .SingleInstance();
+
+        builder.RegisterType<BookManager>()
+            .AsSelf()
+            .AsImplementedInterfaces()
+            .WithParameter(new ResolvedParameter(
+                (pi, cc) => pi.Name == "_validators",
+                (pi, cc) => new[] { cc.ResolveNamed<IValidator>("correctIntValidator"), cc.ResolveNamed<IValidator>("correctFloatValidator") }))
+            .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
+            .SingleInstance();
+
         builder.RegisterType<LengthValidator>()
             .AsSelf()
             .AsImplementedInterfaces()

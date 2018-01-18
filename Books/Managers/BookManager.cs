@@ -1,0 +1,83 @@
+﻿using System;
+using System.Linq;
+
+public class BookManager : IManager
+{
+    private IValidator[] validators; //INt, float
+    public Book newBook { get; set; }
+    public InputReader inputReader { get; set; }
+    public BookContext bookContext { get; set; }
+
+    public BookManager(IValidator[] _validators)
+    {
+        validators = _validators;
+    }
+
+    public void Add()
+    {
+        ValidatorResult validatorResult = null;
+        Book copy = newBook;
+
+        Console.Write("Name: ");
+        newBook.Name = Console.ReadLine();
+
+
+        Console.Write("Price: ");
+        newBook.Price = float.Parse(inputReader.ReadAs((string input) => {
+            validatorResult = validators[1].Validate(input);
+            if (validatorResult.Success)
+                return true;
+            Console.Write("Price: ");
+            return false;
+        }));
+
+        Console.Write("Author ID: ");
+        newBook.Author_ID = int.Parse(inputReader.ReadAs((string input) => {
+            validatorResult = validators[0].Validate(input);
+            if (validatorResult.Success)
+                return true;
+            Console.Write("Author ID: ");
+            return false;
+        }));
+
+        bookContext.Books.Add(newBook);
+        bookContext.SaveChanges();
+        newBook = copy;
+    }
+
+    public void Remove(int ID)
+    {
+        bookContext.Books.Remove(bookContext.Books.Where(book => book.ID == ID).Select(b => b).First());
+        Console.WriteLine("Remove book with ID " + ID);
+        bookContext.SaveChanges();
+    }
+
+    public void List()
+    {
+        foreach (Book b in bookContext.Books)
+        {
+            Console.WriteLine("ID: " + b.ID);
+            Console.WriteLine("Name: " + b.Name);
+            Console.WriteLine("Price: " + b.Price);
+            Console.WriteLine("Author ID: " + b.Author_ID);
+            Console.WriteLine();
+        }
+    }
+
+    public void Find(int ID)
+    {
+        Book book = (Book)IsExists(ID);
+        if (book != null)
+        {
+            Console.WriteLine("Name: " + book.Name);
+            Console.WriteLine("Price: " + book.Price);
+            Console.WriteLine("Author ID: " + book.Author_ID);
+        }
+    }
+
+    public CModel IsExists(int ID)
+    {
+        Book findBook = (from a in bookContext.Books where a.ID == ID select a).FirstOrDefault();
+        return findBook;
+    }
+}

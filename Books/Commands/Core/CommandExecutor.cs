@@ -1,26 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 public class CommandExecutor
 {
-    public BookContext BookContext { get; set; } 
-    public IErrorOutput ErrorOutput { get; set; }
-    private IValidator Validator; //lengthValidator
+    private BookContext bookContext;
+    private IValidator validator; //lengthValidator
+    private IErrorOutput errorOutput;
 
-    public CommandExecutor(IValidator validator)
+    public CommandExecutor(IValidator _validator, IErrorOutput _errorOutput, BookContext bookContext)
     {
-        Validator = validator;
+        validator = _validator;
+        errorOutput = _errorOutput;
+        this.bookContext = bookContext;
     }
 
     public void ExecuteCommand(ICommand command, IList<string> args)
     {
         string data = string.Join(" ", args);
-        ValidatorResult res = Validator.Validate(data);
+        ValidatorResult res = validator.Validate(data);
         if (res.Success)
         {
             args.RemoveAt(0);
-            command.Execute(args, BookContext);
+            Console.WriteLine(); //Space
+            command.Execute(args, bookContext);
+            Console.WriteLine();
         }
         else
-            ErrorOutput.WriteError(res.ErrorCode);
-    } 
+            errorOutput.WriteError(res.ErrorCode);
+    }
 }
